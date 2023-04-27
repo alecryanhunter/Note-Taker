@@ -61,7 +61,8 @@ app.post("/api/notes",(req,res)=>{
             const notesArray = JSON.parse(data);
             const newNote = {
                 title: req.body.title,
-                text: req.body.text
+                text: req.body.text,
+                id: (Math.floor(Math.random()*10000))
             }
             notesArray.push(newNote);
             fs.writeFile(path.join(__dirname,"/db/db.json"),JSON.stringify(notesArray,null,4),(err)=>{
@@ -72,6 +73,33 @@ app.post("/api/notes",(req,res)=>{
                         msg: "Note logged successfully",
                         note: newNote
                     })
+                }
+            })
+        }
+    })
+})
+
+// Deleting a note
+app.delete("/api/notes/:id",(req,res)=>{
+    fs.readFile(path.join(__dirname,"/db/db.json"),"utf-8",(err,data)=>{
+        if (err) {
+            res.status(500).json("error reading notes database");
+        } else {
+            const notesArray = JSON.parse(data);
+            const delId = Number(req.params.id);
+            const delFind = (element)=>{
+                return element.id===delId;
+            }
+            const delIndex = notesArray.findIndex(delFind);
+            const deletedNote = notesArray.splice(delIndex,1)
+            fs.writeFile(path.join(__dirname,"/db/db.json"),JSON.stringify(notesArray,null,4),(err,data)=>{
+                if (err) {
+                    res.status(500).json("error writing notes database");
+                } else {
+                    res.json({
+                        msg: "deleted note",
+                        deletedNote: deletedNote
+                    });
                 }
             })
         }
