@@ -25,6 +25,9 @@ const path = require("path");
 const PORT = process.env.PORT || 3000
 const app = express();
 
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
 app.use(express.static("public"))
 
 // Home Page
@@ -51,9 +54,28 @@ app.get("/api/notes",(req,res)=>{
 
 // Adding a new note
 app.post("/api/notes",(req,res)=>{
-    console.log(req);
-    console.log(req.body);
-    res.send("ok");
+    fs.readFile(path.join(__dirname,"/db/db.json"),"utf-8",(err,data)=>{
+        if (err) {
+            res.status(500).json("error reading database");
+        } else {
+            const notesArray = JSON.parse(data);
+            const newNote = {
+                title: req.body.title,
+                text: req.body.text
+            }
+            notesArray.push(newNote);
+            fs.writeFile(path.join(__dirname,"/db/db.json"),JSON.stringify(notesArray,null,4),(err)=>{
+                if (err) {
+                    res.status(500).json("error writing database");
+                } else {
+                    res.json({
+                        msg: "Note logged successfully",
+                        note: newNote
+                    })
+                }
+            })
+        }
+    })
 })
 
 app.listen(PORT,()=>{
