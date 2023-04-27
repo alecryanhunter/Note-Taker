@@ -27,7 +27,7 @@ app.get("/api/notes",(req,res)=>{
             return res.status(500).json("error retrieving notes database")
         } else {
             const notes = JSON.parse(data);
-            res.send(notes);
+            res.json(notes);
         }
     })
 })
@@ -66,6 +66,7 @@ app.delete("/api/notes/:id",(req,res)=>{
             res.status(500).json("error reading notes database");
         } else {
             const notesArray = JSON.parse(data);
+            // Finds and splices out the desired note from the array
             const delId = Number(req.params.id);
             const delFind = (element)=>{
                 return element.id===delId;

@@ -8,7 +8,7 @@ This challenge was very useful for giving me an entire back-end to develop, whic
 
 ## Usage
 
-The website can be found [here!]()
+The website can be found [here!](https://arh-note-taker.herokuapp.com/)
 
 ## Credits
 
@@ -16,3 +16,4 @@ This website uses Express.js to handle requests. The website is hosted via Herok
 
 ## Screenshots
 
+![A Screenshot of the Page](/Notes_Screenshot.png)
